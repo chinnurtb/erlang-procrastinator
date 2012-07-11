@@ -1,0 +1,14 @@
+{
+  "name": "Procrastinator2012",
+  "version": "1.0",
+  "description": "Productivity extension for measuring time spent on a webpage.\nThe extension tracks user actions during browsing: open tab, switch tab, close tab and reports time spent on the webpage to backend server.A pie-plot is displayed in the popup window for making conclusions about user's procrastination/productivity habits.",
+  "browser_action": {
+    "default_icon": "red.jpg",
+    "popup": "popup.html"
+  },
+  "background_page": "background.html",
+  "permissions": [
+   "tabs",
+    "http://*/"
+  ]
+}

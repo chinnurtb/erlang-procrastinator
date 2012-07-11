@@ -1,0 +1,6 @@
+See report for installation instructions.
+
+Installation sequence (all detailed in report):
+1. Configure and start apache2 reverse proxy,
+2. Start erlang backend,
+3. Install chrome-extension.

@@ -1,0 +1,79 @@
+
+<script type="text/javascript" src="flot/jquery.js"></script>
+<script>
+
+	/* Global variables for tracking state */
+	//var ignoreUrl="chrome://newtab/" // currently not ignoring clear tab
+	var lastUrl = '';
+	var lastOpenedAt = new Date().getTime();
+	
+	function sendIncrement(url, timeInSec){
+		// TODO kui päring failib, siis muuda ikooon
+		$.get("http://localhost/times?cmd=increment&url="+url+"&time="+timeInSec, function(data) {
+			//alert(data);
+		});
+	}
+
+	// a very naive way to shorten urls 
+	function cleanUrl(url){
+		var a= document.createElement ('a');
+		a.href =url;
+		return a.hostname;
+	}
+
+	function submitChange(tab){
+		if (typeof tab === "undefined" && tab.url === "undefined" ) {
+			alert("SHIT, undefined stuffs, bailing oout;) " + tab);
+			return;
+		}
+		var url = tab.url
+		var debugStr="current open url:" + url +"\nlastUrl: "+lastUrl;
+//		alert(debugStr);
+		var currentTime = new Date().getTime();
+		var timeDelta=parseInt((currentTime-lastOpenedAt)/1000); // ms to sec
+
+
+		// võta delta(aeg)
+		// uuenda viimati avatud tabi urli aega baasis, mitte eesoleva oma!!!
+		// submiti data kui ajadelta on suurem 0st ja url muutus
+		
+		// dont send increment for empty url; count only updates for situations where
+		// tab has been active for more than 2sec.
+		if (lastUrl != '' && timeDelta > 2){
+//			alert("saadan update baasi: url:" + url + " time:"+timeDelta);
+			sendIncrement(cleanUrl(lastUrl), timeDelta);
+		}
+
+		lastUrl=url;
+		lastOpenedAt=currentTime;
+	}
+
+ 	chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+		chrome.tabs.getSelected(null,function(tab) {
+			submitChange(tab);
+		});
+	});
+	
+
+	chrome.tabs.onHighlighted.addListener(function(tabId, changeInfo, tab) {
+		chrome.tabs.getSelected(null,function(tab) {
+			submitChange(tab);
+		});
+	});
+
+
+ 	chrome.tabs.onActivated.addListener(function(tabId, changeInfo, tab) {
+		chrome.tabs.getSelected(null,function(tab) {
+			submitChange(tab);
+		});
+	});
+
+
+
+
+// TODO: võta aktiivne tab ja submiti selle url iga 4 sek tagant; aken peab olema kõige peal!!!!
+
+// määra 
+
+  </script>
+

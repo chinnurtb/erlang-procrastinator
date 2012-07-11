@@ -1,0 +1,36 @@
+<script type="text/javascript" src="flot/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="flot/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="flot/jquery.flot.pie.js"></script>
+
+<div style="width: 400; height: 400;" class="graph">
+	<center>
+		<h2>Procrastinator2012</h2>
+		<div id="placeholder" style="width:400; height:400" ></div>
+		<a href="http://en.wikipedia.org/wiki/Procrastination">Procrastination</a>
+	</center>
+</div>
+
+<script type="text/javascript">
+/*Load aggregated data for displaying*/
+	 $.get("http://localhost/times?cmd=load_aggregated", function(data) {
+	alert("data:" +data);
+	var splitPos=data.indexOf("[");
+	//alert(splitPos);
+	if (splitPos > -1) {
+		data=data.substring(splitPos)
+	}
+
+	var jsonData=$.parseJSON(data)
+		$.plot($("#placeholder"), jsonData, 
+	{
+		series: {
+			pie: { 
+				show: true
+			}
+		},
+		legend: {
+			show: false
+		}
+	});
+});
+</script>
